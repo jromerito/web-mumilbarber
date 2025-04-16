@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo Tienda</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+    }
+    .banner {
+      background-color: #f2b632;
+      color: #000;
+      text-align: center;
+      padding: 8px 0;
+      font-size: 15px;
+    }
+    .sidemenu {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 220px;
+      height: 100%;
+      background: #333;
+      color: #fff;
+      transition: 0.3s;
+      z-index: 1000;
+    }
+    .sidemenu.active {
+      left: 0;
+    }
+    .sidemenu a {
+      color: white;
+      display: block;
+      margin: 10px 0;
+      text-decoration: none;
+    }
+    .sidemenu-btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 1100;
+    }
+    .cart-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ffc107;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 18px;
+      z-index: 1100;
+      border: none;
+    }
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1100;
+    }
+    .cart-panel {
+      position: fixed;
+      right: -100%;
+      top: 0;
+      width: 300px;
+      height: 100%;
+      background: #fff;
+      border-left: 1px solid #ccc;
+      transition: 0.3s;
+      z-index: 1001;
+      overflow-y: auto;
+    }
+    .cart-panel.active {
+      right: 0;
+    }
+    .card img {
+      height: 200px;
+      object-fit: contain;
+    }
+    .qty-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .qty-controls button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ccc;
+      background: #000;
+      color: #fff;
+    }
+    .qty-controls span {
+      min-width: 20px;
+      text-align: center;
+    }
+    .qty-controls .add-cart {
+      background: #ccc;
+      color: #000;
+      border: none;
+      padding: 6px 10px;
+      margin-left: 5px;
+    }
+    .modal {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Bienvenida -->
+<div id="welcomeModal" class="modal d-block">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <h5>¡Bienvenido a nuestra tienda!</h5>
+        <button class="btn btn-dark mt-3" onclick="closeWelcome()">Ingresar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Menú lateral -->
+<div id="sideMenu" class="sidemenu">
+  <li><a href="#"> </a></li>
+  <h4 class="p-3">  𝐌𝐄𝐍𝐔</h4>
+  <ul class="list-unstyled ps-3">
+    <li><a href="#">Inicio</a></li>
+    <li><a href="#">Productos</a></li>
+    <li><a href="#" data-bs-toggle="modal" data-bs-target="#contactModal">Contacto</a></li>
+  </ul>
+</div>
+<button class="btn btn-warning sidemenu-btn" onclick="toggleMenu()">➡️</button>
+
+<!-- Banner -->
+<div class="banner">Envíos Gratis a partir de S/ 50.00 a todo Lima. <strong>Promociones todo el Mes</strong></div>
+
+<!-- Productos -->
+<div class="container mt-5">
+  <div class="mb-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="🔍 Buscar producto..." onkeyup="filterProducts()">
+  </div>
+  <div class="row" id="productList"></div>
+</div>
+
+<!-- Carrito (panel emergente) -->
+<div id="cartPanel" class="cart-panel">
+  <h5 class="p-3"> 🛒 Tu Carrito</h5>
+  <div id="cartItems" class="px-3"></div>
+  <div class="p-3">
+    <button class="btn btn-success w-100" onclick="goToWhatsApp()">Finalizar compra en WhatsApp</button>
+  </div>
+</div>
+
+<!-- Botón carrito -->
+<button class="cart-btn" onclick="toggleCart()">
+  🛒 <span id="cartCount">0</span>
+</button>
+
+<!-- WhatsApp -->
+<a href="https://wa.me/51912345678" class="whatsapp-float" target="_blank">
+  <img src="https://img.icons8.com/ios-filled/50/25D366/whatsapp.png" alt="WhatsApp" />
+</a>
+
+<script>
+const products = [
+  { id: 1, name: "Shaver Andis Resurge", price: 469, img: "https://i.imgur.com/JQqU4vN.png" },
+  { id: 2, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 3, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 4, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 5, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 6, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 7, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 8, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 9, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 10, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 10, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 12, name: "Guantes talla M JRL", price: 25, img: "https://i.imgur.com/gXqGlJ9.png" }
+];
+
+let cart = [];
+let quantities = {};
+
+function loadProducts() {
+  const container = document.getElementById('productList');
+  container.innerHTML = "";
+  products.forEach(prod => {
+    quantities[prod.id] = 1;
+    const col = document.createElement('div');
+    col.className = "col-md-4 mb-4";
+    col.innerHTML = `
+      <div class="card h-100">
+        <img src="${prod.img}" class="card-img-top" alt="${prod.name}">
+        <div class="card-body text-center">
+          <h6>${prod.name}</h6>
+          <p class="text-danger">s/ ${prod.price.toFixed(2)}</p>
+          <div class="qty-controls">
+            <button onclick="decreaseQty(${prod.id})">-</button>
+            <span id="qty-${prod.id}">1</span>
+            <button onclick="increaseQty(${prod.id})">+</button>
+            <button class="add-cart" onclick="addToCart(${prod.id})">🛒</button>
+          </div>
+        </div>
+      </div>`;
+    container.appendChild(col);
+  });
+}
+
+function increaseQty(id) {
+  quantities[id]++;
+  document.getElementById(`qty-${id}`).textContent = quantities[id];
+}
+function decreaseQty(id) {
+  if (quantities[id] > 1) {
+    quantities[id]--;
+    document.getElementById(`qty-${id}`).textContent = quantities[id];
+  }
+}
+
+function addToCart(id) {
+  const existing = cart.find(p => p.id === id);
+  const qtyToAdd = quantities[id];
+  if (existing) {
+    existing.qty += qtyToAdd;
+  } else {
+    const prod = products.find(p => p.id === id);
+    cart.push({ ...prod, qty: qtyToAdd });
+  }
+  updateCart();
+}
+
+function updateCart() {
+  const container = document.getElementById('cartItems');
+  const count = document.getElementById('cartCount');
+  container.innerHTML = "";
+  cart.forEach(item => {
+    container.innerHTML += `
+      <div class="d-flex justify-content-between mb-2">
+        <div>${item.name} x${item.qty}</div>
+        <div>s/ ${(item.qty * item.price).toFixed(2)}</div>
+      </div>`;
+  });
+  count.textContent = cart.reduce((sum, p) => sum + p.qty, 0);
+}
+
+function toggleCart() {
+  document.getElementById("cartPanel").classList.toggle("active");
+}
+function toggleMenu() {
+  document.getElementById("sideMenu").classList.toggle("active");
+}
+function closeWelcome() {
+  const modal = document.getElementById("welcomeModal");
+  modal.classList.remove("d-block");
+  modal.classList.add("d-none");
+}
+function goToWhatsApp() {
+  let message = "Hola, quiero comprar:\n";
+  cart.forEach(p => {
+    message += `- ${p.name} x${p.qty} = s/ ${(p.qty * p.price).toFixed(2)}\n`;
+  });
+  const url = "https://wa.me/51912345678?text=" + encodeURIComponent(message);
+  window.open(url, '_blank');
+}
+
+function filterProducts() {
+  const term = document.getElementById('searchInput').value.toLowerCase();
+  const container = document.getElementById('productList');
+  container.innerHTML = "";
+
+  products.forEach(prod => {
+    if (prod.name.toLowerCase().includes(term)) {
+      const col = document.createElement('div');
+      col.className = "col-md-4 mb-4";
+      col.innerHTML = `
+        <div class="card h-100">
+          <img src="${prod.img}" class="card-img-top" alt="${prod.name}">
+          <div class="card-body text-center">
+            <h6>${prod.name}</h6>
+            <p class="text-danger">s/ ${prod.price.toFixed(2)}</p>
+            <div class="qty-controls">
+              <button onclick="decreaseQty(${prod.id})">-</button>
+              <span id="qty-${prod.id}">${quantities[prod.id]}</span>
+              <button onclick="increaseQty(${prod.id})">+</button>
+              <button class="add-cart" onclick="addToCart(${prod.id})">🛒</button>
+            </div>
+          </div>
+        </div>`;
+      container.appendChild(col);
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", loadProducts);
+</script>
+
+<!-- Modal de Contacto -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-3">
+      <h5 class="mb-3">📞 Contáctanos</h5>
+      <p><strong>WhatsApp:</strong> <a href="https://wa.me/51912345678" target="_blank">+51 912 345 678</a></p>
+      <p><strong>Email:</strong> contacto@mitienda.com</p>
+      <p><strong>Dirección:</strong> Av. Principal 123, Lima</p>
+      <button class="btn btn-dark mt-2" data-bs-dismiss="modal">Cerrar</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
