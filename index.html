@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -108,7 +108,60 @@
     }
     .modal {
       background: rgba(0, 0, 0, 0.6);
-    }
+    }.contacto-final {
+  background: url('/ruta/a/la/imagen/trofeos.png') no-repeat center center/cover;
+  color: #fff;
+  padding: 60px 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+}
+
+.contenido-contacto {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.columna {
+  flex: 1 1 300px;
+  margin: 20px;
+}
+
+.columna .icono {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 20px;
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #FFD700;
+}
+
+.columna h2 {
+  color: #FFD700;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.redes h3 {
+  color: #FFD700;
+  margin-bottom: 10px;
+  font-size: 22px;
+}
+
+.iconos-redes a {
+  margin: 0 10px;
+  color: #fff;
+  font-size: 26px;
+  transition: 0.3s;
+}
+
+.iconos-redes a:hover {
+  color: #FFD700;
+}
+
   </style>
 </head>
 <body>
@@ -132,7 +185,7 @@
   <ul class="list-unstyled ps-3">
     <li><a href="#">Inicio</a></li>
     <li><a href="#">Productos</a></li>
-    <li><a href="#" data-bs-toggle="modal" data-bs-target="#contactModal">Contacto</a></li>
+    <li><a href="#" data-bs-toggle="modal" data-bs-target="#contactModal">  𝕔𝕠𝕟𝕥𝕒𝕔𝕥𝕠</a></li>
   </ul>
 </div>
 <button class="btn btn-warning sidemenu-btn" onclick="toggleMenu()">➡️</button>
@@ -179,8 +232,10 @@ const products = [
   { id: 8, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
   { id: 9, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
   { id: 10, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
-  { id: 10, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
-  { id: 12, name: "Guantes talla M JRL", price: 25, img: "https://i.imgur.com/gXqGlJ9.png" }
+  { id: 11, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 12, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 13, name: "Atomizador JRL", price: 15, img: "https://i.imgur.com/qpboHgG.png" },
+  { id: 14, name: "Guantes talla M JRL", price: 25, img: "https://i.imgur.com/gXqGlJ9.png" }
 ];
 
 let cart = [];
@@ -309,7 +364,36 @@ document.addEventListener("DOMContentLoaded", loadProducts);
       <p><strong>Dirección:</strong> Av. Principal 123, Lima</p>
       <button class="btn btn-dark mt-2" data-bs-dismiss="modal">Cerrar</button>
     </div>
+  </div> 
+</div><!-- Sección de contacto -->
+<section class="contacto-final">
+  <div class="contenido-contacto">
+    <div class="columna">
+      <div class="icono"><i class="fas fa-phone-alt"></i></div>
+      <h2>Teléfono</h2>
+      <p>936 818 001<br>936 803 665<br>934 306 302</p>
+    </div>
+    <div class="columna">
+      <div class="icono"><i class="fas fa-envelope"></i></div>
+      <h2>Correo</h2>
+      <p>SANBARBERP@GMAIL.COM</p>
+    </div>
+    <div class="columna">
+      <div class="icono"><i class="fas fa-map-marker-alt"></i></div>
+      <h2>Ubicación</h2>
+      <p>LIMA - PERÚ</p>
+    </div>
   </div>
-</div>
+  <div class="redes">
+    <h3>Síguenos en:</h3>
+    <div class="iconos-redes">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-tiktok"></i></a>
+    </div>
+  </div>
+</section> 
+
 </body>
 </html>
+
